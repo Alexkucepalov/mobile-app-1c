@@ -1,0 +1,112 @@
+.background1 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.378);
+}
+
+.background2 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+
+
+.icon-style {
+    margin-right: 5px;
+    /* Отступ справа 10 пикселей */
+}
+
+.window1 {
+    width: 800px;
+    /* ширина контейнера + паддинги */
+    padding: 10px;
+    /* пространство вокруг списка */
+    border-radius: 5px;
+    /* закругленные углы */
+    background-color: #fff;
+    /* белый фон для контейнера */
+
+    /* Тень */
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.546);
+    /* border: 1px solid black; */
+}
+
+.window2 {
+    width: 500px;
+    /* ширина контейнера + паддинги */
+    padding: 10px;
+    /* пространство вокруг списка */
+    border-radius: 5px;
+    /* закругленные углы */
+    background-color: #fff;
+    /* белый фон для контейнера */
+
+    /* Тень */
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.546);
+    /* border: 1px solid black; */
+}
+
+.window3 {
+    width: 100%;
+    height: calc(100vh - 100px);
+   
+    /* закругленные углы */
+    /* белый фон для контейнера */
+
+    /* Тень */
+    box-shadow: 0px 4px 8px #0000008b;
+    /* border: 1px solid black; */
+
+    overflow: auto; 
+}
+
+.custom-thead1 {
+    --bs-table-bg: #e5e5e5 !important;
+    /* Это цвет из Bootstrap для темного фона */
+    --bs-table-color: #121111 !important;
+    /* Белый цвет для текста */
+}
+
+.selected-row {
+    --bs-table-bg: #1798d452;
+    /* font-weight: 700; */
+}
+
+.table {
+    --bs-table-striped-bg: #f2f2f2;
+}
+
+.panel-buttons {
+    display: flex;
+    justify-content: flex-end; 
+    align-items: center;
+    gap: 10px; /* расстояние между кнопками */
+    padding: 10px;
+    background-color: #303b44;
+    margin-bottom: 5px; /* отступ от других элементов */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.panel-buttons-2 {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start; 
+    align-items: center;
+    gap: 10px; /* расстояние между кнопками */
+    padding: 10px;
+    background-color: #e5e5e5;
+    margin-bottom: 5px; /* отступ от других элементов */
+    /* box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); */
+}
