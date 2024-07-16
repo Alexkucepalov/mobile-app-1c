@@ -40,7 +40,7 @@ function App() {
           )}
         </div>
         <Button onClick={() => УстановитьОтображаетсяАвторизация(true)}>
-          Настройки
+          Авторизация
         </Button>
       </div>
       <ListDoc />

@@ -26,6 +26,7 @@ function Description({ document, setShowDescription, callbackAfterUpdate, docTyp
     } else {
       fetch_get(`${docType}products`, setDescription);
     }
+
     setLoading(false);
   }, [document, docType]);
 
@@ -95,6 +96,20 @@ function Description({ document, setShowDescription, callbackAfterUpdate, docTyp
     setShowDescription(false);
   };
 
+
+  const isEditable = () => {
+    const today = new Date();
+    const documentDate = new Date(document.Дата.replace(/(\d+).(\d+).(\d+)/, '$3-$2-$1'));
+    const pastDate = new Date(today);
+    pastDate.setDate(today.getDate() - document.ДнейДляРедактирования); // вычисляем дату начала периода редактирования
+
+    console.log(`Document Date: ${documentDate}`);
+    console.log(`Today: ${today}`);
+    console.log(`Past Date: ${pastDate}`);
+
+    return documentDate >= pastDate && documentDate <= today; // проверяем, попадает ли дата документа в период редактирования
+  };
+
   if (loading) {
     return <div>Загрузка данных...</div>;
   }
@@ -106,8 +121,8 @@ function Description({ document, setShowDescription, callbackAfterUpdate, docTyp
   return (
     <div className="background2">
       <Draggable handle=".handle">
-        <div className="window1" style={{ width: '90%', height: 'calc(55vh)', overflow: 'auto' }}>
-          <h4 className="handle">Данные о документе</h4>
+        <div className="window1" style={{ width: '100%', height: '100%', overflow: 'auto' }}>
+          <h4 className="handle">Данные о документе ({docType === 'prihod' ? 'поступление' : 'реализация'})</h4>
           <table className="table table-striped table-bordered table-hover">
             <thead className="custom-thead1">
               <tr>
@@ -126,15 +141,19 @@ function Description({ document, setShowDescription, callbackAfterUpdate, docTyp
                 <td>{document.КонтрагентНаименование}</td>
                 <td>{document.ОрганизацияНаименование}</td>
                 <td>
-                  <input
-                    type="text"
-                    value={localData.mainDocument?.Комментарий ?? document.Комментарий}
-                    onChange={(e) => handleChange(e, null, 'Комментарий')}
-                  />
+                  {userRole.ЕстьРольЗакупка && isEditable() ? (
+                    <input
+                      type="text"
+                      value={localData.mainDocument?.Комментарий ?? document.Комментарий}
+                      onChange={(e) => handleChange(e, null, 'Комментарий')}
+                    />
+                  ) : (
+                    <span>{localData.mainDocument?.Комментарий ?? document.Комментарий}</span>
+                  )}
                 </td>
                 {docType === 'prihod' && (
                   <td>
-                    {userRole.ЕстьРольСклад ? (
+                    {userRole.ЕстьРольСклад && isEditable() ? (
                       <input
                         type="date"
                         value={localData.mainDocument?.ДатаВыгрузкиФакт ?? document.ДатаВыгрузкиФакт}
@@ -172,20 +191,12 @@ function Description({ document, setShowDescription, callbackAfterUpdate, docTyp
                   <td>{item.НомерСтроки}</td>
                   <td>{item.НоменклатураНаименование}</td>
                   <td>
-                    {userRole.ЕстьРольЗакупка ? (
-                      <input
-                        type="text"
-                        value={localData[index]?.Количество ?? item.Количество}
-                        onChange={(e) => handleChange(e, index, 'Количество')}
-                      />
-                    ) : (
-                      <span>{localData[index]?.Количество ?? item.Количество}</span>
-                    )}
+                    <span>{localData[index]?.Количество ?? item.Количество}</span>
                   </td>
                   {docType === 'prihod' && (
                     <>
                       <td>
-                        {userRole.ЕстьРольЗакупка ? (
+                        {userRole.ЕстьРольЗакупка && isEditable() ? (
                           <input
                             type="text"
                             value={localData[index]?.ВесЗагрузки ?? item.ВесЗагрузки}
@@ -196,7 +207,7 @@ function Description({ document, setShowDescription, callbackAfterUpdate, docTyp
                         )}
                       </td>
                       <td>
-                        {userRole.ЕстьРольСклад ? (
+                        {userRole.ЕстьРольСклад && isEditable() ? (
                           <input
                             type="text"
                             value={localData[index]?.ВесВыгрузки ?? item.ВесВыгрузки}
@@ -207,7 +218,7 @@ function Description({ document, setShowDescription, callbackAfterUpdate, docTyp
                         )}
                       </td>
                       <td>
-                        {userRole.ЕстьРольЗакупка ? (
+                        {userRole.ЕстьРольЗакупка && isEditable() ? (
                           <input
                             type="text"
                             value={localData[index]?.ПроцентПотерь ?? item.ПроцентПотерь}
@@ -220,7 +231,7 @@ function Description({ document, setShowDescription, callbackAfterUpdate, docTyp
                     </>
                   )}
                   <td>
-                    {userRole.ЕстьРольЗакупка ? (
+                    {userRole.ЕстьРольЗакупка && isEditable() ? (
                       <input
                         type="text"
                         value={localData[index]?.Цена ?? item.Цена}
@@ -238,8 +249,8 @@ function Description({ document, setShowDescription, callbackAfterUpdate, docTyp
             </tbody>
           </table>
           <div style={{ gap: '10px', display: 'flex', marginTop: '10px' }}>
-            <Button onClick={() => setShowDescription(false)}>Закрыть</Button>
-            <Button onClick={handleClick}>Сохранить изменения</Button>
+            <Button variant="success" onClick={handleClick} disabled={!isEditable()}>Сохранить изменения</Button> 
+            <Button variant="secondary" onClick={() => setShowDescription(false)}>Закрыть</Button>
           </div>
         </div>
       </Draggable>

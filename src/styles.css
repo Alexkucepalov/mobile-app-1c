@@ -110,3 +110,24 @@
     margin-bottom: 5px; /* отступ от других элементов */
     /* box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); */
 }
+
+.table-responsive {
+    table-layout: auto;
+}
+
+.date-group {
+    display: flex;
+    align-items: center;
+  }
+  
+  .date-group-item {
+    display: flex;
+    align-items: center;
+    margin-right: 10px;
+  }
+  
+  .date-label {
+    margin-top: 10px;
+    margin-right: 5px;
+    white-space: nowrap;
+  }

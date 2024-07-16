@@ -8,14 +8,10 @@ import Draggable from 'react-draggable';
 export default function ОкноАвторизации({ ЗакрытьОкно }) {
     const [Пользователь, УстановитьПользователь] = useState('');
     const [Пароль, УстановитьПароль] = useState('');
-    const [IP, УстановитьIP] = useState('');
-    const [Port, УстановитьPort] = useState('');
 
     function СохранитьПарольВБД() {
         localStorage.setItem('Пользователь', Пользователь);
         localStorage.setItem('Пароль', Пароль);
-        localStorage.setItem('IP', IP);
-        localStorage.setItem('Port', Port);
     }
 
     return (
@@ -42,30 +38,12 @@ export default function ОкноАвторизации({ ЗакрытьОкно 
                         />
                     </Form.Group>
 
-                    <Form.Group className="mb-3">
-                        <Form.Control
-                            type="text"
-                            placeholder="IP-адрес"
-                            value={IP}
-                            onChange={(e) => УстановитьIP(e.target.value)}
-                        />
-                    </Form.Group>
-
-                    <Form.Group className="mb-3">
-                        <Form.Control
-                            type="text"
-                            placeholder="Порт"
-                            value={Port}
-                            onChange={(e) => УстановитьPort(e.target.value)}
-                        />
-                    </Form.Group>
-
                     <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                         <Button onClick={() => {
                             СохранитьПарольВБД();
                             ЗакрытьОкно();
                         }}>Сохранить</Button>
-                        <Button onClick={ЗакрытьОкно}>Закрыть</Button>
+                        <Button variant="secondary" onClick={ЗакрытьОкно}>Закрыть</Button>
                     </div>
                 </div>
             </Draggable>

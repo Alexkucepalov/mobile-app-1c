@@ -1,6 +1,5 @@
-// Fetch IP and port from localStorage
-const ip = localStorage.getItem('IP') || 'localhost';
-const port = localStorage.getItem('Port') || '80';
+const ip = window.location.hostname;
+const port = window.location.port;
 let url_base = `http://${ip}:${port}/UT11/hs/api`;
 
 if (process.env.NODE_ENV === 'development') {
@@ -69,26 +68,74 @@ export async function fetch_post(request, data, callback = null) {
         const response = await fetch(`${url_base}/${request}`, {
             method: 'POST',
             headers: {
-                'Authorization': 'Basic ' + btoa(login + ':' + passwd)
+                'Authorization': 'Basic ' + btoa(login + ':' + passwd),
+                'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ data: data }),
+            body: JSON.stringify(data),
         });
 
-        const responseData = await response.json();
-
         if (!response.ok) {
-            throw new Error('Ошибка сети или сервера');
+            throw new Error(`Ошибка сети или сервера: ${response.status} ${response.statusText}`);
         }
 
-        console.log('Данные успешно отправлены', responseData);
+        const responseData = await response.text(); // Получаем ответ как текст
 
-        if (callback) {
-            callback && callback(responseData);
+        // Проверяем, является ли ответ JSON
+        if (responseData) {
+            try {
+                const jsonResponse = JSON.parse(responseData);
+                console.log('Данные успешно отправлены', jsonResponse);
+
+                if (callback) {
+                    callback(jsonResponse);
+                }
+
+                return jsonResponse;
+            } catch (jsonError) {
+                console.error('Ошибка при парсинге JSON:', jsonError);
+                throw new Error('Некорректный JSON-ответ от сервера');
+            }
+        } else {
+            console.log('Ответ сервера пуст');
+            if (callback) {
+                callback(null);
+            }
+            return null;
         }
-
-        return responseData;
     } catch (error) {
         console.error('Ошибка при отправке данных:', error);
         throw error;
     }
 }
+
+
+export async function fetchProducts(callback) {
+    const login = localStorage.getItem('Пользователь');
+    const passwd = localStorage.getItem('Пароль');
+  
+    try {
+      const response = await fetch(`${url_base}/products`, {
+        method: 'GET',
+        headers: {
+          'Authorization': 'Basic ' + btoa(login + ':' + passwd),
+        },
+      });
+  
+      if (!response.ok) {
+        throw new Error('Ошибка сети или сервера');
+      }
+  
+      const products = await response.json();
+      console.log('Продукты успешно получены', products);
+  
+      if (callback) {
+        callback(products);
+      }
+  
+      return products;
+    } catch (error) {
+      console.error('Ошибка при получении продуктов:', error);
+      throw error;
+    }
+  }
+  
